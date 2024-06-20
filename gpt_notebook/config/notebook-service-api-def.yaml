@@ -1,0 +1,44 @@
+# openapi2-functions.yaml
+swagger: '2.0'
+info:
+  title: API_ID optional-string
+  description: Sample API on API Gateway with a Google Cloud Functions backend
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /hello:
+    get:
+      summary: Greet a user
+      operationId: hello
+      x-google-backend:
+        address: https://us-central1-nimesa-1549405366717.cloudfunctions.net/gpt-service
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+  /store:
+    post:
+      summary: Store JSON data
+      operationId: store
+      x-google-backend:
+        address: https://us-central1-nimesa-1549405366717.cloudfunctions.net/gpt-service
+      parameters:
+        - in: body
+          name: data
+          description: JSON data to store
+          required: true
+          schema:
+            type: object
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error
