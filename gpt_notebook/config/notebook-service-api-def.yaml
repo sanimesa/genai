@@ -1,31 +1,32 @@
-# openapi2-functions.yaml
 swagger: '2.0'
 info:
-  title: API_ID optional-string
-  description: Sample API on API Gateway with a Google Cloud Functions backend
-  version: 1.0.0
+  title: GPT Notebook API
+  description: API Gateway for a cloud functions backend to service the Notebook GPT
+  version: 1.0.1
 schemes:
   - https
 produces:
   - application/json
+x-google-management:
+  metrics:
+    - name: "gpt-notebook-request"
+      displayName: "GPT Notebook request quota"
+      valueType: INT64
+      metricKind: DELTA
+  quota:
+    limits:
+      - name: "gpt-notebook-limit"
+        metric: "gpt-notebook-request"
+        unit: "1/min/{project}"
+        values:
+          STANDARD: 20
 paths:
-  /hello:
-    get:
-      summary: Greet a user
-      operationId: hello
-      x-google-backend:
-        address: https://us-central1-nimesa-1549405366717.cloudfunctions.net/gpt-service
-      responses:
-        '200':
-          description: A successful response
-          schema:
-            type: string
   /store:
     post:
       summary: Store JSON data
       operationId: store
       x-google-backend:
-        address: https://us-central1-nimesa-1549405366717.cloudfunctions.net/gpt-service
+        address: <CLOUD_FUNCTION_URL>
       parameters:
         - in: body
           name: data
@@ -42,3 +43,31 @@ paths:
           description: Invalid input
         '500':
           description: Internal server error
+      x-google-quota:
+        metricCosts:
+          "gpt-notebook-request": 1
+  /retrieve:
+    post:
+      summary: Retrieve user notes based on query  
+      operationId: retrieve
+      x-google-backend:
+        address: <CLOUD_FUNCTION_URL>
+      parameters:
+        - in: body
+          name: data
+          description: The query data to retrieve notes
+          required: true
+          schema:
+            type: object
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error
+      x-google-quota:
+        metricCosts:
+          "gpt-notebook-request": 1

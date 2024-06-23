@@ -1,0 +1,67 @@
+openapi: 3.1.0
+info:
+  title: GPT Notebook API
+  description: API Gateway for a cloud functions backend to service the Notebook GPT
+  version: 1.0.0
+servers:
+  - url: <API_GATEWAY_URL>
+paths:
+  /store:
+    post:
+      summary: Store JSON data
+      operationId: store
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                topic:
+                  type: string
+                parsed_values:
+                  type: string
+                  description: comma separated key-value pairs from the text
+                raw_text:
+                  type: string
+              required:
+                - topic
+                - raw_text
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error
+  /retrieve:
+    post:
+      summary: Retrieve user's notes
+      operationId: retrieve
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: The user query contents  
+              required:
+                - query
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error

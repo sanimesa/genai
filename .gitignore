@@ -2,3 +2,6 @@
 /Lib
 /Scripts
 pyvenv.cfg
+gpt_notebook/config/gpt-action-openapi-config-REAL.yaml
+gpt_notebook/config/notebook-service-api-def-REAL.yaml
+.vscode/launch.json
