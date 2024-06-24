@@ -1,0 +1,1 @@
+gcloud functions deploy gpt_notebook_service --gen2 --runtime=python312 --region=us-east1 --source=. --entry-point=service --trigger-http --set-env-vars PROJECT_ID=%PROJECT_ID%,GEMINI_API_KEY=%GEMINI_API_KEY% --memory 1024MB --cpu 1
