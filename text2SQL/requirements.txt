@@ -1,0 +1,7 @@
+google-generativeai==0.8.3
+google-cloud-bigquery==3.25.0
+streamlit==1.37.0
+openai==1.51.2
+pandas-gbq==0.24.0
+pyyaml==6.0.2
+python-dotenv==1.0.1

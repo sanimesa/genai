@@ -1,0 +1,49 @@
+general_settings:
+  logging_level: "INFO"
+  retries: 3
+  timeout_seconds: 30
+  model_type: "Gemini"
+  data_source: "theLookretail"
+
+model_config:
+  GPT:
+    model_name: "gpt-4o"
+    provider: "OpenAI"
+    api_key: "OPENAI_API_KEY"
+    generation_config: 
+      max_tokens: 2048
+      temperature: 0.7
+  Gemini:
+    model_name: "gemini-1.5-flash-002"
+    provider: "Google"
+    api_key: "GEMINI_API_KEY"
+    generation_config: 
+      temperature: 1
+      # top_p: 0.95
+      # top_k: 64
+      max_output_tokens: 8192
+      response_mime_type: "text/plain"
+
+data_sources:
+  theLookretail:
+    type: "BigQuery"
+    schema: data_source/theLookretail/schema.ddl
+    examples: data_source/theLookretail/examples.ddl
+    system_instruction: "You are a Google SQL expert. You have been tasked to generate SQL statements to answer user questions based on the below schema:"
+  database_1:
+    type: "PostgreSQL"
+    host: "localhost"
+    port: 5432
+    database: "my_database"
+    username: "your_username"
+    password: "your_password"
+  s3_bucket:
+    type: "AWS S3"
+    bucket_name: "my-s3-bucket"
+    region: "us-east-1"
+    access_key: "your_access_key"
+    secret_key: "your_secret_key"
+  google_sheet:
+    type: "Google Sheets"
+    spreadsheet_id: "your_spreadsheet_id"
+    credentials_file: "path_to_google_credentials.json"
