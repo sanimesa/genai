@@ -8,3 +8,6 @@ gpt_notebook/config/notebook-service-api-def-REAL.yaml
 /text2SQL/__pycache__
 /text2SQL/handlers/__pycache__
 text2SQL/.env
+/open-interpreter/Lib
+/open-interpreter/Scripts
+/share
