@@ -1,0 +1,3 @@
+markdown2
+gradio
+google-generativeai
