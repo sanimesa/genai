@@ -2,5 +2,6 @@
 
 A chatbot that demonstrates the [Grounding with Google Search](https://ai.google.dev/gemini-api/docs/grounding?lang=python) feature. 
 
-![image](https://github.com/user-attachments/assets/fc597cbc-f1db-47c0-a954-4be20c1f0317)
+![image](https://github.com/user-attachments/assets/5097c4dd-110f-47d9-a9a5-56d9bb015f4b)
+
 
