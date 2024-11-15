@@ -10,65 +10,49 @@ from typing import Dict, List, Tuple
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
 
-def parse_gemini_response(response_data: types.GenerateContentResponse) -> Tuple[str, Dict[str, str]]:
+def parse_gemini_response(response: types.GenerateContentResponse) -> str:
     """
     Parse the Gemini API response to extract text and sources.
     
     Args:
-        response_data: Raw response from Gemini API
+        response: Raw response from Gemini API
     
     Returns:
-        Tuple containing formatted text and sources dictionary
+        Markdown formatted text with citations 
     """
+
     try:
-        # Parse the response data
-        
-        # Extract the main text content
-        text = response_data.text
-        print("the text is: " + text)
-        
-        # Extract sources from grounding metadata
-        sources = {}
-        if "grounding_metadata" in response_data.candidates[0]:
-            chunks = response_data.candidates[0].grounding_metadata.grounding_chunks
+        sources_text = ""
+        sources_refs = []
+        base_text = response.text
+
+        if "grounding_metadata" in response.candidates[0]:
+            chunks = response.candidates[0].grounding_metadata.grounding_chunks
             for i, chunk in enumerate(chunks):
                 if "web" in chunk:
                     source_name = chunk.web.title
                     source_url = chunk.web.uri
-                    sources[f"source_{i+1}"] = {
-                        "name": source_name,
-                        "url": source_url
-                    }
-        
-        return text, sources
+                    sources_text += f"{i+1}.&nbsp;[{source_name}]({source_url})<br/> "
+                    sources_refs.append(f"[[{i+1}]({source_url})]")
+
+            supports = response.candidates[0].grounding_metadata.grounding_supports
+
+            for support in supports:
+            # print(support.segment.text, support.grounding_chunk_indices)
+                if (support.segment.text in base_text):
+                    ref_links = [sources_refs[inx] for inx in support.grounding_chunk_indices]
+                    # print(ref_links)
+                    base_text = base_text.replace(support.segment.text, support.segment.text + " " + ''.join(ref_links))
+
+            base_text += "### Grounding Sources:\n"
+            base_text += sources_text
+
+        return base_text
+
     except Exception as e:
         return f"Error parsing response: {str(e)}", {}
 
-def format_grouding_sources(content, citations):
-    """
-    Formats API response content and citations for Gradio chatbot.
-
-    Args:
-    - content (str): The main text.
-    - citations (dict): A dictionary of sources with names and URLs.
-
-    Returns:
-    - str: A chatbot-formatted string with content and citations.
-    """
-    # Format the main text
-    response = f"{content.strip()}\n\n"
-
-    # Add citations section
-    if len(citations) > 0: 
-        response += "### Citations:\n"
-        for key, source in citations.items():
-            name = source.get('name', 'Unknown Source')
-            url = source.get('url', '#')
-            response += f"- [{name}]({url})\n"
-
-    return response
-
-def query_gemini(prompt: str, system_instruction: str, model: str, temperature: float, enable_search: bool = False) -> str:
+def query_gemini(prompt: str, system_instruction: str, model: str, temperature: float, enable_search: bool = False, dynamic_threshold: float = 0.3) -> str:
     """
     Query the Gemini API with optional search grounding.
     
@@ -92,19 +76,24 @@ def query_gemini(prompt: str, system_instruction: str, model: str, temperature: 
             safety_settings=[],
         )
 
-        response = model.generate_content(
-            contents=prompt,
+        if enable_search:
             tools={"google_search_retrieval": {
                 "dynamic_retrieval_config": {
                     "mode": "unspecified",
-                    "dynamic_threshold": 0.06}}})
+                    "dynamic_threshold": dynamic_threshold}}}
+        else:
+            tools=None
+            
+
+        response = model.generate_content(
+            contents=prompt,
+            tools=tools)
 
         print(response)
 
         if enable_search:
             # Parse response and format with citations
-            text, sources = parse_gemini_response(response)
-            return format_grouding_sources(text, sources)
+            return parse_gemini_response(response)
         else:
             # Return plain response
             return response.text
@@ -171,7 +160,7 @@ def create_chatbot():
                 temperature = gr.Slider(
                     minimum=0,
                     maximum=1,
-                    value=0,
+                    value=0.3,
                     step=0.1,
                     label="Temperature"
                 )
@@ -182,13 +171,22 @@ def create_chatbot():
                     value=True,
                     info="When enabled, the model will use real-time search to ground its responses"
                 )
-        
+
+                dynamic_threshold = gr.Slider(
+                    minimum=0,
+                    maximum=1,
+                    value=0.1,
+                    step=0.1,
+                    label="Dynamic Threshold",
+                    info="Sets the threshold for prediction score"
+                )
+
         # Store conversation state
         state = gr.State([])
         
-        def respond(message, history, system_inst, model, temp, search):
+        def respond(message, history, system_inst, model, temp, search, threshold):
             if message:
-                response = query_gemini(message, system_inst, model, temp, search)
+                response = query_gemini(message, system_inst, model, temp, search, threshold)
                 history.append((message, response))
                 return "", history
             return "", history
@@ -202,7 +200,8 @@ def create_chatbot():
                 system_instruction,
                 model_selection,
                 temperature,
-                enable_search
+                enable_search,
+                dynamic_threshold
             ],
             outputs=[chat_input, chat_history]
         )
@@ -215,7 +214,8 @@ def create_chatbot():
                 system_instruction,
                 model_selection,
                 temperature,
-                enable_search
+                enable_search,
+                dynamic_threshold
             ],
             outputs=[chat_input, chat_history]
         )
