@@ -11,3 +11,10 @@ text2SQL/.env
 /open-interpreter/Lib
 /open-interpreter/Scripts
 /share
+autogen_agents/.cache/41/cache.db
+/google_adk/file_system_agent/__pycache__
+/google_adk/search_agent/__pycache__
+/google_adk/weather_agent/__pycache__
+/google_adk/research_agent/__pycache__
+/mcp_toolbox/db
+/mcp_toolbox/pgadmin-data
