@@ -8,7 +8,7 @@ CREATE TABLE notes (
     category VARCHAR(50) NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     action_date TIMESTAMPTZ,
-    status entry_status NOT NULL DEFAULT 'Open'
+    status notes_status NOT NULL DEFAULT 'Open'
 );
 
 -- Indexes for common query patterns
