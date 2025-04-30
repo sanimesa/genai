@@ -1,0 +1,6 @@
+google-adk
+toolbox-langchain 
+langchain
+loguru
+xhtml2pdf
+openpyxl

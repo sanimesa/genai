@@ -12,20 +12,21 @@ SESSION_ID="1234"
 
 
 # Load a specific set of tools
-tools = toolbox.get_toolset(toolset_name='my-toolset'),
-print(toolbox)
+tools = toolbox.get_toolset(toolset_name='entry-management-toolset'),
+print(type(tools))
 print(tools)
+
 # Load single tool
-tool = toolbox.get_tool(tool_name='search-hotels-by-name')
+tool = toolbox.get_tool(tool_name='search-entries-by-status')
 
 root_agent = Agent(
-    name="hotel_booking_agent",
+    name="notes_manager",
     model="gemini-2.0-flash",
     description=(
-        "An agent that helps with booking hotels."
+        "An agent that helps with notes management."
     ),
     instruction=(
-        "You are a helpful agent who can answer user questions about hotels."
+        "You are a helpful agent who can manage notes for a user."
     ),
     tools=[tool] # Provide the list of tools to the Agent
 )
@@ -52,12 +53,4 @@ def call_agent(query):
 
             print("Agent Response: ", final_response)
 
-call_agent("Can you please describe the Hilton hotel?")
-
-# toolsets:
-#   my-toolset:
-#     - search-hotels-by-name
-#     - search-hotels-by-location
-#     - book-hotel
-#     - update-hotel
-#     - cancel-hotel
+call_agent("Can you list all open entries?")

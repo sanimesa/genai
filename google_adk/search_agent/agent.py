@@ -3,6 +3,7 @@ from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.adk.tools import google_search
 from google.genai import types
+import loguru
 
 APP_NAME="google_search_agent"
 USER_ID="user1234"

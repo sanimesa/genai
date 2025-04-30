@@ -18,3 +18,4 @@ autogen_agents/.cache/41/cache.db
 /google_adk/research_agent/__pycache__
 /mcp_toolbox/db
 /mcp_toolbox/pgadmin-data
+/google_adk/data_analyzer/__pycache__
