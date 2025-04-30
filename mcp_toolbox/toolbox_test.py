@@ -12,12 +12,12 @@ SESSION_ID="1234"
 
 
 # Load a specific set of tools
-tools = toolbox.get_toolset(toolset_name='entry-management-toolset'),
+tools = toolbox.get_toolset(toolset_name='note-management-toolset'),
 print(type(tools))
 print(tools)
 
 # Load single tool
-tool = toolbox.get_tool(tool_name='search-entries-by-status')
+tool = toolbox.get_tool(tool_name='search-notes-by-status')
 
 root_agent = Agent(
     name="notes_manager",
