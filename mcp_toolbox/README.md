@@ -22,5 +22,10 @@ This repository contains a Docker Compose setup to quickly spin up a PostgreSQL 
 
 ## Getting Started
 
-Extract the files of this folder and run docker compose: 
+Extract the files of this folder and run docker compose:  
 _docker compose up -d_
+
+## Using the MCP Inspector:
+
+Run the following command:   
+_npx @modelcontextprotocol/inspector_
