@@ -1,7 +1,7 @@
 # Google ADK Sample Agentic Applications
 
 <a href="https://google.github.io/adk-docs/">
-  <img src="https://google.github.io/adk-docs/assets/agent-development-kit.png" alt="Agent Development Kit" style="width:50%; height:auto;"/>
+  <img src="https://google.github.io/adk-docs/assets/agent-development-kit.png" alt="Agent Development Kit" style="width:20%; height:auto;"/>
 </a>
 
 <!-- # Google ADK Sample Agentic Applications
