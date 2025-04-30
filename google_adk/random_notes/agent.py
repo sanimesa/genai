@@ -1,17 +1,23 @@
+from datetime import datetime
 from google.adk.tools.toolbox_tool import ToolboxTool
 from google.adk.agents import LlmAgent
 
-toolbox = ToolboxTool("https://127.0.0.1:5000")
+toolbox = ToolboxTool("http://127.0.0.1:5000")
 
 # Load a specific set of tools
-tools = toolbox.get_toolset(toolset_name='my-toolset-name'),
+tools = toolbox.get_toolset(toolset_name='note-management-toolset')
+
 # Load single tool
-tools = toolbox.get_tool (tool_name='my-tool-name'),
+search_notes_tool = toolbox.get_tool(tool_name='search-notes-by-status')
+
+current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 root_agent = LlmAgent(
     name="NotesManager",
     model="gemini-2.0-flash",
     instruction="You are a helpful assistant who helps the user in taking random notes." \
-    "These notes could be ideas, reminders, meeting notes, etc. ",
-    tools=[research_assistant, pdf_generator],
+    "The current date is " + current_date + "." \
+    "These notes could be categorized as ideas, reminders, meeting notes, personal notes etc. " \
+    "You may need to perform multiple searches and ask user for clarifications.",
+    tools=tools,
 )

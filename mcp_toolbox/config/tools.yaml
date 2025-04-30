@@ -8,84 +8,84 @@ sources:
     password: my-password
 
 tools:
-  create-entry:
+  create-note:
     kind: postgres-sql
     source: my-pg-source
-    description: Create a new text entry with content and category
+    description: Create a new text note with content and category
     parameters:
       - name: content
         type: string
-        description: The text content of the entry
+        description: The text content of the note
       - name: category
         type: string
-        description: Category for the entry
+        description: Category for the note
       - name: action_date
         type: string
         description: Optional action date (YYYY-MM-DD HH:MM:SS format)
     statement: |
-      INSERT INTO entries (content, category, action_date)
+      INSERT INTO notes (content, category, action_date)
       VALUES ($1, $2, CAST($3 AS TIMESTAMPTZ));
 
-  search-entries-by-category:
+  search-notes-by-category:
     kind: postgres-sql
     source: my-pg-source
-    description: Search entries by category name
+    description: Search notes by category name
     parameters:
       - name: category
         type: string
         description: Category name to search for
     statement: |
-      SELECT * FROM entries 
+      SELECT * FROM notes 
       WHERE category ILIKE '%' || $1 || '%';
 
-  search-entries-by-status:
+  search-notes-by-status:
     kind: postgres-sql
     source: my-pg-source
-    description: Search entries by their current status
+    description: Search notes by their current status
     parameters:
       - name: status
         type: string
         description: Status to filter by (Open, Completed, Deferred)
     statement: |
-      SELECT * FROM entries
+      SELECT * FROM notes
       WHERE status = $1::entry_status;
 
-  update-entry-status:
+  update-note-status:
     kind: postgres-sql
     source: my-pg-source
-    description: Update the status of an entry
+    description: Update the status of a note
     parameters:
-      - name: entry_id
+      - name: note_id
         type: string
-        description: ID of the entry to update
+        description: ID of the note to update
       - name: new_status
         type: string
         description: New status (Open, Completed, Deferred)
     statement: |
-      UPDATE entries
+      UPDATE notes
       SET status = $2::entry_status
       WHERE id = CAST($1 AS INTEGER);
 
-  set-entry-action-date:
+  set-note-action-date:
     kind: postgres-sql
     source: my-pg-source
-    description: Set or update the action date for an entry
+    description: Set or update the action date for a note
     parameters:
-      - name: entry_id
+      - name: note_id
         type: string
-        description: ID of the entry to update
+        description: ID of the note to update
       - name: action_date
         type: string
         description: New action date (YYYY-MM-DD HH:MM:SS format)
     statement: |
-      UPDATE entries
+      UPDATE notes
       SET action_date = CAST($2 AS TIMESTAMPTZ)
       WHERE id = CAST($1 AS INTEGER);
 
-  search-entries-by-action-range:
+  search-notes-by-action-range:
     kind: postgres-sql
     source: my-pg-source
-    description: Find entries with action dates in a specified range
+    description: Find notes with action dates in a specified range
     parameters:
       - name: start_date
         type: string
@@ -94,95 +94,14 @@ tools:
         type: string
         description: End of date range (YYYY-MM-DD format)
     statement: |
-      SELECT * FROM entries
+      SELECT * FROM notes
       WHERE action_date BETWEEN CAST($1 AS DATE) AND CAST($2 AS DATE);
 
 toolsets:
-  # my-toolset:
-  #   - search-hotels-by-name
-  #   - search-hotels-by-location
-  #   - book-hotel
-  #   - update-hotel
-  #   - cancel-hotel
-
-  entry-management-toolset:
-    - create-entry
-    - search-entries-by-category
-    - search-entries-by-status
-    - update-entry-status
-    - set-entry-action-date
-    - search-entries-by-action-range
-
-
-# sources:
-#   my-pg-source:
-#     kind: postgres
-#     host: db  # Changed from 127.0.0.1 to the service name
-#     port: 5432
-#     database: toolbox_db
-#     user: toolbox_user
-#     password: my-password
-# tools:
-#   search-hotels-by-name:
-#     kind: postgres-sql
-#     source: my-pg-source
-#     description: Search for hotels based on name.
-#     parameters:
-#       - name: name
-#         type: string
-#         description: The name of the hotel.
-#     statement: SELECT * FROM hotels WHERE name ILIKE '%' || $1 || '%';
-#   search-hotels-by-location:
-#     kind: postgres-sql
-#     source: my-pg-source
-#     description: Search for hotels based on location.
-#     parameters:
-#       - name: location
-#         type: string
-#         description: The location of the hotel.
-#     statement: SELECT * FROM hotels WHERE location ILIKE '%' || $1 || '%';
-#   book-hotel:
-#     kind: postgres-sql
-#     source: my-pg-source
-#     description: >-
-#       Book a hotel by its ID. If the hotel is successfully booked, returns a NULL, raises an error if not.
-#     parameters:
-#       - name: hotel_id
-#         type: string
-#         description: The ID of the hotel to book.
-#     statement: UPDATE hotels SET booked = B'1' WHERE id = $1;
-#   update-hotel:
-#     kind: postgres-sql
-#     source: my-pg-source
-#     description: >-
-#       Update a hotel's check-in and check-out dates by its ID. Returns a message
-#       indicating  whether the hotel was successfully updated or not.
-#     parameters:
-#       - name: hotel_id
-#         type: string
-#         description: The ID of the hotel to update.
-#       - name: checkin_date
-#         type: string
-#         description: The new check-in date of the hotel.
-#       - name: checkout_date
-#         type: string
-#         description: The new check-out date of the hotel.
-#     statement: >-
-#       UPDATE hotels SET checkin_date = CAST($2 as date), checkout_date = CAST($3
-#       as date) WHERE id = $1;
-#   cancel-hotel:
-#     kind: postgres-sql
-#     source: my-pg-source
-#     description: Cancel a hotel by its ID.
-#     parameters:
-#       - name: hotel_id
-#         type: string
-#         description: The ID of the hotel to cancel.
-#     statement: UPDATE hotels SET booked = B'0' WHERE id = $1;
-# toolsets:
-#   my-toolset:
-#     - search-hotels-by-name
-#     - search-hotels-by-location
-#     - book-hotel
-#     - update-hotel
-#     - cancel-hotel
+  note-management-toolset:
+    - create-note
+    - search-notes-by-category
+    - search-notes-by-status
+    - update-note-status
+    - set-note-action-date
+    - search-notes-by-action-range
