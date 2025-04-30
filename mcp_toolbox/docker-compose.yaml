@@ -53,8 +53,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: password
     volumes:
       - ./pgadmin-data:/var/lib/pgadmin
-      #- ./config/servers.json:/pgadmin4/servers.json      
-      - ./config/servers.json:/var/lib/pgadmin/servers.json  # Corrected path      
+      - ./config/servers.json:/pgadmin4/servers.json      
     depends_on:
       db:
         condition: service_healthy
