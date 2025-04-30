@@ -1,6 +1,12 @@
 # Google ADK Sample Agentic Applications
 
-[![Agent Development Kit](https://google.github.io/adk-docs/assets/agent-development-kit.png)](https://google.github.io/adk-docs/)
+<a href="https://google.github.io/adk-docs/">
+  <img src="https://google.github.io/adk-docs/assets/agent-development-kit.png" alt="Agent Development Kit" style="width:50%; height:auto;"/>
+</a>
+
+<!-- # Google ADK Sample Agentic Applications
+
+[![Agent Development Kit](https://google.github.io/adk-docs/assets/agent-development-kit.png)](https://google.github.io/adk-docs/) -->
 
 This repository contains sample agentic applications demonstrating capabilities of the **Google Agent Development Kit (ADK)**. These examples help developers get started with building intelligent agents using Google's development framework.
 
